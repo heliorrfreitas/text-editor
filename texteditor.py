@@ -1,27 +1,23 @@
 import tkinter as tk
-from tkinter.filedialog import *
+from tkinter.filedialog import asksaveasfile, askopenfile, Text
 import sys
 
 class App(tk.Tk):
 
-    def quit(self, event):
-        print("quitting...")
+    def quit(self, event=None):
         sys.exit(0)
 
-    def new(self, event): 
-        print("new file ...")       
+    def new(self, event=None): 
         self.filename = "Untitled"
-        self.text.delete(0.0, tk.END)    
+        self.text.delete(0.0, tk.END)       
     
-    def save(self, event):
-        print('update file...')
+    def save(self, event=None):    
         t = self.text.get(0.0, tk.END)
         f = open(self.filename, 'w')
         f.write(t)
         f.close()
     
-    def saveas(self, event):
-        print("Save file as...")
+    def saveas(self, event=None):
         f = tk.filedialog.asksaveasfile(mode='w', defaultextension=".txt")
         t = self.text.get(0.0, tk.END)
         
@@ -32,17 +28,12 @@ class App(tk.Tk):
 
         self.filename = f.name
     
-    def open(self, event):
-        print("Open file...")
+    def open(self, event=None):
         f = tk.filedialog.askopenfile(mode='r')
         t = f.read()
         self.text.delete(0.0, tk.END)
         self.text.insert(0.0, t)
         self.filename = f.name
-
-
-    def menuoptions(self, event):
-        print("AQUI")
 
     def __init__(self):
         tk.Tk.__init__(self)
@@ -57,25 +48,11 @@ class App(tk.Tk):
         
         menubar.add_cascade(label="File", underline=0, menu=filemenu)
         
-
-        filemenu.add_command(label="New", underline=1,
-                                command=quit, accelerator="Ctrl+N")
-
-        filemenu.add_command(label="Open", underline=2,
-                                command=open, accelerator="Ctrl+O")
-
-        filemenu.add_command(label="Save", underline=3,
-                                command=quit, accelerator="Ctrl+S")
-
-
-        filemenu.add_command(label="Save As...", underline=4,
-                                command=quit, accelerator="Ctrl+Shift+S")
-
-        
-        filemenu.add_command(label="Exit", underline=5,
-                                command=quit, accelerator="Ctrl+Q")
-
-
+        filemenu.add_command(label="New", underline=1, command= self.new, accelerator="Ctrl+N")
+        filemenu.add_command(label="Open", underline=2, command=self.open, accelerator="Ctrl+O")
+        filemenu.add_command(label="Save", underline=3, command=self.save, accelerator="Ctrl+S")
+        filemenu.add_command(label="Save As...", underline=4, command=self.saveas, accelerator="Ctrl+Shift+S")
+        filemenu.add_command(label="Exit", underline=5, command=quit, accelerator="Ctrl+Q")
 
         self.config(menu=menubar)
         self.bind_all("<Control-n>", self.new)
@@ -88,9 +65,6 @@ class App(tk.Tk):
         
         self.text = Text(self, width=400, height=400)
         self.text.pack()
-
-    
-
     
 if __name__ == "__main__":
     app = App()
